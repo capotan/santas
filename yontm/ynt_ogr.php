@@ -4,6 +4,7 @@ function ogretim()
 {
 	?>
 <table>
+<tr><td><a href="ynt_home.php?s=ogr&y=ekle">Ekle</a></td>
 <?php
 
 $a=1;
@@ -30,8 +31,8 @@ echo "</tr>";
 function duzenle($id)
 {
 	if ($_POST['isim']) {
-		mysql_query(" UPDATE ogr_elemanlari SET (isim,bilgi,mail,resim,resim2) values('$_POST[isim]','$_POST[bilgi]','$_POST[mail]','$_POST[resim]','$_POST[resim2]') ");
-		//header("location:ynt_home.php?s=ogr");
+		mysql_query(" UPDATE ogr_elemanlari SET isim='".$_POST['isim']."', bilgi='".$_POST['bilgi']."', mail='".$_POST['mail']."'  WHERE id=$id ");
+		header("location:ynt_home.php?s=ogr");
 	}
 	else
 	{
@@ -52,7 +53,29 @@ function duzenle($id)
 }
 function sil($id)
 {
+	mysql_query("delete  from ogr_elemanlari where id=$id");
+	header("location:ynt_home.php?s=ogr");
+}
+function ekle()
+{
+	if ($_POST['isim']) {
+		mysql_query("insert into  ogr_elemanlari (isim,bilgi,mail) values ('".$_POST['isim']."','".$_POST['bilgi']."','".$_POST['mail']."')  ");
+		header("location:ynt_home.php?s=ogr");
+	}
+	else
+	{
+		?>
+	<form method="post" enctype="multipart/form-data">
+		İsim:<input type="text" name="isim" >
+		Bilgi:<textarea name="bilgi"></textarea>
+		E-mail:<input type="text" name="mail" >
+		Resim 1:<input type="file" name="resim1" >
+		Resim 2:<input type="file" name="resim2" >
+		<input type="submit" value="Kaydet">
 
+	</form>
+<?php
+}
 }
 switch ($_GET['y']) {
 	case 'duzenle':
@@ -60,6 +83,9 @@ switch ($_GET['y']) {
 		break;
 	case 'sil':
 		sil($_GET['d']);
+		break;
+	case 'ekle':
+		ekle();
 		break;
 	
 	default:
